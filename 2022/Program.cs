@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Day2;
+using Day3;
 
-var p = new Day2_Part1();
+var p = new Day3_Part2();
 p.Run();
