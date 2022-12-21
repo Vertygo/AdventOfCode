@@ -1,4 +1,4 @@
-﻿using Day11;
+﻿using Day12;
 
-var p = new Day11_Part2();
+var p = new Day12_Part1();
 p.Run();
