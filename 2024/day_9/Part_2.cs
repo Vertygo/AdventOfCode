@@ -15,8 +15,8 @@ public partial class Day9_Part2
 
         var sum = wholeFiles
             .SelectMany(ConvertWholeFilesToBlocks)
-            .Select((d, index) => (diskPresentation: d, index: index))
-            .Sum(s => s.diskPresentation.DiskID * s.index);
+            .Select((fileBlock, index) => (fileBlock, index))
+            .Sum(s => s.fileBlock.DiskID * s.index);
 
         Console.WriteLine(sum);
     }
@@ -30,19 +30,21 @@ public partial class Day9_Part2
     {
         for (int i = wholeFiles.Count - 1; i > 0; i--)
         {
-            var diskRep = wholeFiles[i];
-            if (!diskRep.IsFreeSpace)
+            var wholeFile = wholeFiles[i];
+            if (!wholeFile.IsFreeSpace)
             {
-                var freeSpaceIndex = wholeFiles.FindIndex(s => s.IsFreeSpace && s.Size >= diskRep.Size);
+                var freeSpaceIndex = wholeFiles.FindIndex(s => s.IsFreeSpace && s.Size >= wholeFile.Size);
                 if (freeSpaceIndex > -1 && freeSpaceIndex < i)
                 {
-                    var dfs = wholeFiles[freeSpaceIndex];
-                    var rest = dfs.Size - diskRep.Size;
-                    wholeFiles[i] = dfs with { Size = diskRep.Size };
-                    wholeFiles[freeSpaceIndex] = diskRep;
+                    var freeSpaceWholeFile = wholeFiles[freeSpaceIndex];
+                    var rest = freeSpaceWholeFile.Size - wholeFile.Size;
+
+                    wholeFiles[i] = freeSpaceWholeFile with { Size = wholeFile.Size };
+                    wholeFiles[freeSpaceIndex] = wholeFile;
+
                     if (rest > 0)
                     {
-                        wholeFiles.Insert(freeSpaceIndex + 1, new WholeFile(dfs.DiskID, rest, true));
+                        wholeFiles.Insert(freeSpaceIndex + 1, new WholeFile(freeSpaceWholeFile.DiskID, rest, true));
                     }
                 }
             }
